@@ -16,11 +16,12 @@ Run `cleanup.bat` like that you did in Visual Studio cleanup.
 Currently, certain parts of `MdePkg` are included in compilation. Parts included in compilation depends on the need of project NoirVisor: https://github.com/Zero-Tang/NoirVisor
 
 ## Issue
-Seldom, there might be some typos in EDK II, resulted in compilation errors. These errors will remove the erroneous modules from library. Unless these modules are required for you to use, it is fine since it will not prevent the library from being generated. In case you require them, go to EDK II and report issues, or just revise EDK II on your own. <br>
+Seldom, there might be some typos in EDK II, resulted in compilation errors. These errors will remove the erroneous modules from library. Unless these modules are required for you to use, it is fine since it will not prevent the library from being generated. In case you require them, report the issue to [TianoCore Bugzilla](https://bugzilla.tianocore.org/). <br>
 
-## Relevant Projects
+## Similar Project
 [Alex Ionescu](https://github.com/ionescu007) made a project called [VisualUefi](https://github.com/ionescu007/VisualUefi). <br>
 However, compilation is done by Visual Studio. In project NoirVisor, EFI executables are compiled by LLVM-Clang. Static libraries compiled by VisualUefi are not linkable via LLVM-LLD, so I made this project: compile EDK II libraries via LLVM-Clang and via Netwide Assembler and link them into static libraries so that they are linkable via LLVM-LLD.
 
 # License
-This repository is licensed under the MIT license.
+This repository is licensed under the MIT license. <br>
+EDK II is licensed under the BSD-2-Clause+Patent License. View it on [EDK II GitHub Repository](https://github.com/tianocore/edk2/blob/master/License.txt)
