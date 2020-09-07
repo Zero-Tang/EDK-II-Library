@@ -49,5 +49,23 @@ mkdir %objpath%\UefiLib
 mkdir %objpath%\UefiDebugLibConOut
 mkdir %objpath%\UefiMemoryAllocationLib
 
+echo Making Directories for MdeModulePkg...
+mkdir %edkpath%\Bin\MdeModulePkg
+set mmppath=%edkpath%\Bin\MdeModulePkg
+
+echo Making Directories for Checked Build...
+mkdir %mmppath%\compchk_uefix64
+mkdir %mmppath%\compchk_uefix64\Intermediate
+set objpath=%mmppath%\compchk_uefix64\Intermediate
+
+mkdir %objpath%\UefiSortLib
+
+echo Making Directories for Free Build...
+mkdir %mmppath%\compfre_uefix64
+mkdir %mmppath%\compfre_uefix64\Intermediate
+set objpath=%mmppath%\compfre_uefix64\Intermediate
+
+mkdir %objpath%\UefiSortLib
+
 echo Completed!
 pause.
