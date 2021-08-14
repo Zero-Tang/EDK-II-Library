@@ -15,6 +15,10 @@ clang-cl --version
 lld-link --version
 pause
 
+echo Compiling RuntimeDxeCore...
+for %%1 in (%mmppath%\Core\RuntimeDxe\*.c) do (clang-cl %%1 /I"%mdepath%\Include" /I"%mdepath%\Include\X64" /I"%mmppath%\Include" /Zi /W3 /WX /Od /Oi /Fa"%objpath%\RuntimeDxeCore\%%~n1.cod" /Fo"%objpath%\RuntimeDxeCore\%%~n1.obj" /GS- /Gr /TC /c)
+llvm-lib "%objpath%\RuntimeDxeCore\*.obj" /MACHINE:X64 /OUT:"%binpath%\RuntimeDxeCore.lib"
+
 echo Compiling UefiSortLib...
 clang-cl %mmppath%\Library\UefiSortLib\UefiSortLib.c /I"%mdepath%\Include" /I"%mdepath%\Include\X64" /I"%mmppath%\Include" /Zi /W3 /WX /Od /Oi /Fa"%objpath%\UefiSortLib\UefiSortLib.cod" /Fo"%objpath%\UefiSortLib\UefiSortLib.obj" /GS- /Gr /TC /c
 llvm-lib "%objpath%\UefiSortLib\UefiSortLib.obj" /MACHINE:X64 /OUT:"%binpath%\UefiSortLib.lib"

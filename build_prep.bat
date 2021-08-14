@@ -59,6 +59,7 @@ mkdir %mmppath%\compchk_uefix64\Intermediate
 set objpath=%mmppath%\compchk_uefix64\Intermediate
 
 mkdir %objpath%\UefiSortLib
+mkdir %objpath%\DxeResetSystemLib
 
 echo Making Directories for Free Build...
 mkdir %mmppath%\compfre_uefix64
@@ -66,6 +67,18 @@ mkdir %mmppath%\compfre_uefix64\Intermediate
 set objpath=%mmppath%\compfre_uefix64\Intermediate
 
 mkdir %objpath%\UefiSortLib
+mkdir %objpath%\DxeResetSystemLib
+
+echo Making Directories for SourceLevelDebugPkg...
+mkdir %edkpath%\Bin\SourceLevelDebugPkg
+set sldpath=%edkpath%\Bin\SourceLevelDebugPkg
+
+echo Making Directories for Checked Build...
+mkdir %sldpath%\compchk_uefix64
+mkdir %sldpath%\compchk_uefix64\Intermediate
+set objpath=%sldpath%\compchk_uefix64\Intermediate
+
+mkdir %objpath%\DebugAgent
 
 echo Completed!
 pause.

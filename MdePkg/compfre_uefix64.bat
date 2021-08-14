@@ -15,7 +15,8 @@ lld-link --version
 pause
 
 echo Compiling BaseLib...
-for %%1 in (%mdepath%\Library\BaseLib\*.c) do (clang-cl %%1 /I"%mdepath%\Include" /I"%mdepath%\Include\X64" /Zi /W3 /WX /O2 /Oi /Fa"%objpath%\BaseLib\%%~n1.cod" /Fo"%objpath%\BaseLib\%%~n1.obj" /FI"%mdepath%\Library\BaseLib\BaseLibInternals.h" /FI".\pcdhack.h" /GS- /Gy /GF /Gr /TC /c)
+for %%1 in (%mdepath%\Library\BaseLib\*.c) do (clang-cl %%1 /I"%mdepath%\Include" /I"%mdepath%\Include\X64" /I"%mdepath%\Test\UnitTest\Include" /Zi /W3 /WX /O2 /Oi /Fa"%objpath%\BaseLib\%%~n1.cod" /Fo"%objpath%\BaseLib\%%~n1.obj" /FI"%mdepath%\Library\BaseLib\BaseLibInternals.h" /FI".\pcdhack.h" /GS- /Gy /GF /Gr /TC /c)
+del %objpath%\BaseLib\X86UnitTestHost.obj
 for %%1 in (%mdepath%\Library\BaseLib\X64\*.nasm) do (nasm -o "%objpath%\BaseLib\%%~n1.obj" -fwin64 -g -I"%mdepath%\Library\BaseLib" -I"%mdepath%\Include" -I"%mdepath%\Include\X64" -P".\pcdhack.nasm" %%1)
 llvm-lib "%objpath%\BaseLib\*.obj" /MACHINE:X64 /OUT:"%binpath%\BaseLib.Lib"
 
