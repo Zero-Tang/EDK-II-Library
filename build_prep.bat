@@ -58,6 +58,7 @@ mkdir %mmppath%\compchk_uefix64
 mkdir %mmppath%\compchk_uefix64\Intermediate
 set objpath=%mmppath%\compchk_uefix64\Intermediate
 
+mkdir %objpath%\RuntimeDxeCore
 mkdir %objpath%\UefiSortLib
 mkdir %objpath%\DxeResetSystemLib
 
@@ -66,6 +67,7 @@ mkdir %mmppath%\compfre_uefix64
 mkdir %mmppath%\compfre_uefix64\Intermediate
 set objpath=%mmppath%\compfre_uefix64\Intermediate
 
+mkdir %objpath%\RuntimeDxeCore
 mkdir %objpath%\UefiSortLib
 mkdir %objpath%\DxeResetSystemLib
 
@@ -79,6 +81,17 @@ mkdir %sldpath%\compchk_uefix64\Intermediate
 set objpath=%sldpath%\compchk_uefix64\Intermediate
 
 mkdir %objpath%\DebugAgent
+
+echo Making Directories for UefiCpuPkg...
+mkdir %edkpath%\Bin\UefiCpuPkg
+set cpupath=%edkpath%\Bin\UefiCpuPkg
+
+echo Making Directories for Checked Build...
+mkdir %cpupath%\compchk_uefix64
+mkdir %cpupath%\compchk_uefix64\Intermediate
+set objpath=%cpupath%\compchk_uefix64\Intermediate
+
+mkdir %objpath%\CpuDxe
 
 echo Completed!
 pause.
