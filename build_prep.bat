@@ -24,8 +24,10 @@ set objpath=%mdepath%\compchk_uefix64\Intermediate
 
 mkdir %objpath%\BaseLib
 mkdir %objpath%\BaseDebugPrintErrorLevelLib
+mkdir %objpath%\BaseIoLibIntrinsic
 mkdir %objpath%\BaseMemoryLib
 mkdir %objpath%\BasePrintLib
+mkdir %objpath%\RegisterFilterLibNull
 mkdir %objpath%\UefiBootServicesTableLib
 mkdir %objpath%\UefiRuntimeServicesTableLib
 mkdir %objpath%\UefiDevicePathLibDevicePathProtocol
@@ -40,8 +42,10 @@ set objpath=%mdepath%\compfre_uefix64\Intermediate
 
 mkdir %objpath%\BaseLib
 mkdir %objpath%\BaseDebugPrintErrorLevelLib
+mkdir %objpath%\BaseIoLibIntrinsic
 mkdir %objpath%\BaseMemoryLib
 mkdir %objpath%\BasePrintLib
+mkdir %objpath%\RegisterFilterLibNull
 mkdir %objpath%\UefiBootServicesTableLib
 mkdir %objpath%\UefiRuntimeServicesTableLib
 mkdir %objpath%\UefiDevicePathLibDevicePathProtocol

@@ -24,6 +24,11 @@ echo Compiling BaseDebugPrintErrorLevelLib...
 clang-cl %mdepath%\Library\BaseDebugPrintErrorLevelLib\BaseDebugPrintErrorLevelLib.c /I"%mdepath%\Include" /I"%mdepath%\Include\X64" /Zi /W3 /WX /Od /Oi /Fa"%objpath%\BaseDebugPrintErrorLevelLib\BaseDebugPrintErrorLevelLib.cod" /Fo"%objpath%\BaseDebugPrintErrorLevelLib\BaseDebugPrintErrorLevelLib.obj" /FI".\pcdhack.h" /GS- /Gr /TC /c -Wno-microsoft-static-assert
 llvm-lib "%objpath%\BaseDebugPrintErrorLevelLib\BaseDebugPrintErrorLevelLib.obj" /MACHINE:X64 /OUT:"%binpath%\BaseDebugPrintErrorLevelLib.lib"
 
+echo Compiling BaseIoLibIntrinsic...
+for %%1 in (%mdepath%\Library\BaseIoLibIntrinsic\*.c) do (clang-cl %%1 /I"%mdepath%\Include" /I"%mdepath%\Include\X64" /Zi /W3 /WX /Od /Oi /Fa"%objpath%\BaseIoLibIntrinsic\%%~n1.cod" /Fo"%objpath%\BaseIoLibIntrinsic\%%~n1.obj" /FI".\pcdhack.h" /GS- /Gr /TC /c -Wno-microsoft-static-assert -Wno-ignored-pragma-intrinsic)
+for %%1 in (%mdepath%\Library\BaseIoLibIntrinsic\*.nasm) do (nasm -o "%objpath%\BaseIoLibIntrinsic\%%~n1.obj" -fwin64 -g -I"%mdepath%\Include" -I"%mdepath%\Include\X64" %%1)
+llvm-lib "%objpath%\BaseIoLibIntrinsic\*.obj" /MACHINE:X64 /OUT:"%binpath%\BaseIoLibIntrinsic.Lib"
+
 echo Compiling BaseMemoryLib...
 for %%1 in (%mdepath%\Library\BaseMemoryLib\*.c) do (clang-cl %%1 /I"%mdepath%\Include" /I"%mdepath%\Include\X64" /Zi /W3 /WX /Od /Oi /Fa"%objpath%\BaseMemoryLib\%%~n1.cod" /Fo"%objpath%\BaseMemoryLib\%%~n1.obj" /FI"%mdepath%\Library\BaseMemoryLib\MemLibInternals.h" /FI".\pcdhack.h" /GS- /Gr /TC /c -Wno-microsoft-static-assert)
 llvm-lib "%objpath%\BaseMemoryLib\*.obj" /MACHINE:X64 /OUT:"%binpath%\BaseMemoryLib.Lib"
@@ -31,6 +36,10 @@ llvm-lib "%objpath%\BaseMemoryLib\*.obj" /MACHINE:X64 /OUT:"%binpath%\BaseMemory
 echo Compiling BasePrintLib...
 for %%1 in (%mdepath%\Library\BasePrintLib\*.c) do (clang-cl %%1 /I"%mdepath%\Include" /I"%mdepath%\Include\X64" /Zi /W3 /WX /Od /Oi /Fa"%objpath%\BasePrintLib\%%~n1.cod" /Fo"%objpath%\BasePrintLib\%%~n1.obj" /FI".\pcdhack.h" /GS- /Gr /TC /c -Wno-microsoft-static-assert)
 llvm-lib "%objpath%\BasePrintLib\*.obj" /MACHINE:X64 /OUT:"%binpath%\BasePrintLib.Lib"
+
+echo Compiling RegisterFilterLibNull...
+clang-cl %mdepath%\Library\RegisterFilterLibNull\RegisterFilterLibNull.c /I"%mdepath%\Include" /I"%mdepath%\Include\X64" /Zi /W3 /WX /Od /Oi /Fa"%objpath%\RegisterFilterLibNull\RegisterFilterLibNull.cod" /Fo"%objpath%\RegisterFilterLibNull\RegisterFilterLibNull.obj" /FI"%mdepath%\Include\Uefi.h" /FI".\pcdhack.h" /GS- /Gr /TC /c -Wno-microsoft-static-assert
+llvm-lib "%objpath%\RegisterFilterLibNull\RegisterFilterLibNull.obj" /MACHINE:X64 /OUT:"%binpath%\RegisterFilterLibNull.Lib"
 
 echo Compiling UefiBootServicesTableLib...
 clang-cl %mdepath%\Library\UefiBootServicesTableLib\UefiBootServicesTableLib.c /I"%mdepath%\Include" /I"%mdepath%\Include\X64" /Zi /W3 /WX /Od /Oi /Fa"%objpath%\UefiBootServicesTableLib\UefiBootServicesTableLib.cod" /Fo"%objpath%\UefiBootServicesTableLib\UefiBootServicesTableLib.obj" /FI".\pcdhack.h" /GS- /Gr /TC /c -Wno-microsoft-static-assert
