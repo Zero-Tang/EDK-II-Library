@@ -30,6 +30,7 @@ echo Compiling BaseIoLibIntrinsic...
 cl %mdepath%\Library\BaseIoLibIntrinsic\IoLibMsc.c /I"%mdepath%\Include" /I"%mdepath%\Include\X64" /I".\\" /Zi /nologo /W3 /WX /O2 /Oi /FAcs /Fa"%objpath%\BaseIoLibIntrinsic\IoLibMsc.cod" /Fo"%objpath%\BaseIoLibIntrinsic\IoLibMsc.obj" /Fd"%objpath%\vc140.pdb" /FI"pcdhack.h" /GS- /Gr /TC /c
 cl %mdepath%\Library\BaseIoLibIntrinsic\IoLibMmioBuffer.c /I"%mdepath%\Include" /I"%mdepath%\Include\X64" /I".\\" /Zi /nologo /W3 /WX /O2 /Oi /FAcs /Fa"%objpath%\BaseIoLibIntrinsic\IoLibMmioBuffer.cod" /Fo"%objpath%\BaseIoLibIntrinsic\IoLibMmioBuffer.obj" /Fd"%objpath%\vc140.pdb" /FI"pcdhack.h" /GS- /Gr /TC /c
 cl %mdepath%\Library\BaseIoLibIntrinsic\IoLib.c /I"%mdepath%\Include" /I"%mdepath%\Include\X64" /I".\\" /Zi /nologo /W3 /WX /O2 /Oi /FAcs /Fa"%objpath%\BaseIoLibIntrinsic\IoLib.cod" /Fo"%objpath%\BaseIoLibIntrinsic\IoLib.obj" /Fd"%objpath%\vc140.pdb" /FI"pcdhack.h" /GS- /Gr /TC /c
+cl %mdepath%\Library\BaseIoLibIntrinsic\IoLibInternalTdxNull.c /I"%mdepath%" /I"%mdepath%\Include" /I"%mdepath%\Include\X64" /I".\\" /Zi /nologo /W3 /WX /O2 /Oi /FAcs /Fa"%objpath%\BaseIoLibIntrinsic\IoLibInternalTdxNull.cod" /Fo"%objpath%\BaseIoLibIntrinsic\IoLibInternalTdxNull.obj" /Fd"%objpath%\vc140.pdb" /FI"pcdhack.h" /FI"Uefi.h" /GS- /Gr /TC /c
 for %%1 in (%mdepath%\Library\BaseIoLibIntrinsic\*.nasm) do (nasm -o "%objpath%\BaseIoLibIntrinsic\%%~n1.obj" -fwin64 -g -I"%mdepath%\Include" -I"%mdepath%\Include\X64" %%1)
 lib "%objpath%\BaseIoLibIntrinsic\*.obj" /MACHINE:X64 /NOLOGO /OUT:"%binpath%\BaseIoLibIntrinsic.Lib"
 
