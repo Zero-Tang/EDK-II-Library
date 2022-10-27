@@ -1,10 +1,10 @@
 @echo off
-set edkpath=C:\UefiDKII
-set mdepath=C:\UefiDKII\MdePkg
-set mmppath=C:\UefiDKII\MdeModulePkg
-set cpupath=C:\UefiDKII\UefiCpuPkg
-set binpath=C:\UefiDKII\Bin\UefiCpuPkg\compchk_uefix64
-set objpath=C:\UefiDKII\Bin\UefiCpuPkg\compchk_uefix64\Intermediate
+set edkpath=..\edk2
+set mdepath=..\edk2\MdePkg
+set mmppath=..\edk2\MdeModulePkg
+set cpupath=..\edk2\UefiCpuPkg
+set binpath=..\edk2\Bin\UefiCpuPkg\compchk_uefix64
+set objpath=..\edk2\Bin\UefiCpuPkg\compchk_uefix64\Intermediate
 
 title Compiling EDK-II-Library UefiCpuPkg, Checked Build, UEFI (AMD64 Architecture)
 echo Project: EDK-II-Library UefiCpuPkg, Checked Build

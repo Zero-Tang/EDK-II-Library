@@ -1,5 +1,5 @@
 @echo off
-set edkpath=C:\UefiDKII
+set edkpath=..\edk2
 
 title EDK II Library Compilation Preparation
 echo Project: EDK II Library

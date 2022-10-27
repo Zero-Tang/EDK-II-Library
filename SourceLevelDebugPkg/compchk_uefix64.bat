@@ -1,10 +1,10 @@
 @echo off
-set edkpath=C:\UefiDKII
-set mdepath=C:\UefiDKII\MdePkg
-set cpupath=C:\UefiDKII\UefiCpuPkg
-set sldpath=C:\UefiDKII\SourceLevelDebugPkg
-set binpath=C:\UefiDKII\Bin\SourceLevelDebugPkg\compchk_uefix64
-set objpath=C:\UefiDKII\Bin\SourceLevelDebugPkg\compchk_uefix64\Intermediate
+set edkpath=..\edk2
+set mdepath=..\edk2\MdePkg
+set cpupath=..\edk2\UefiCpuPkg
+set sldpath=..\edk2\SourceLevelDebugPkg
+set binpath=..\edk2\Bin\SourceLevelDebugPkg\compchk_uefix64
+set objpath=..\edk2\Bin\SourceLevelDebugPkg\compchk_uefix64\Intermediate
 
 title Compiling EDK-II-Library SourceLevelDebugPkg, Checked Build, UEFI (AMD64 Architecture)
 echo Project: EDK-II-Library SourceLevelDebugPkg, Checked Build

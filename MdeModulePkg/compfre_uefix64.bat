@@ -1,9 +1,9 @@
 @echo off
-set edkpath=C:\UefiDKII
-set mdepath=C:\UefiDKII\MdePkg
-set mmppath=C:\UefiDKII\MdeModulePkg
-set binpath=C:\UefiDKII\Bin\MdeModulePkg\compfre_uefix64
-set objpath=C:\UefiDKII\Bin\MdeModulePkg\compfre_uefix64\Intermediate
+set edkpath=..\edk2
+set mdepath=..\edk2\MdePkg
+set mmppath=..\edk2\MdeModulePkg
+set binpath=..\edk2\Bin\MdeModulePkg\compfre_uefix64
+set objpath=..\edk2\Bin\MdeModulePkg\compfre_uefix64\Intermediate
 
 title Compiling EDK-II-Library MdeModulePkg, Free Build, UEFI (AMD64 Architecture)
 echo Project: EDK-II-Library MdeModulePkg, Free Build
