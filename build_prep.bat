@@ -1,5 +1,5 @@
 @echo off
-set edkpath=..\edk2
+set edkpath=.\edk2
 
 title EDK II Library Compilation Preparation
 echo Project: EDK II Library
@@ -96,6 +96,9 @@ mkdir %cpupath%\compchk_uefix64\Intermediate
 set objpath=%cpupath%\compchk_uefix64\Intermediate
 
 mkdir %objpath%\CpuDxe
+
+echo Installing EDK2...
+setx EDK2_PATH %cd%\edk2
 
 echo Completed!
 pause.

@@ -1,5 +1,5 @@
 @echo off
-set edkpath=..\edk2
+set edkpath=.\edk2
 
 title EDK-II-Library Cleanup
 echo Project: EDK-II-Library
