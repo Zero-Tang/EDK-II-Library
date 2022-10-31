@@ -1,5 +1,5 @@
 @echo off
-set edkpath=...\edk2
+set edkpath=..\edk2
 set ddkpath=V:\Program Files\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.31.31103
 set path=%ddkpath%\bin\Hostx64\x64;V:\Program Files\Windows Kits\10\bin\10.0.22621.0\x64;%path%
 set incpath=V:\Program Files\Windows Kits\10\Include\10.0.22621.0

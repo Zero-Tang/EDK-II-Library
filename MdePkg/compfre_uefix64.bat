@@ -24,6 +24,14 @@ echo Compiling BaseDebugPrintErrorLevelLib...
 clang-cl %mdepath%\Library\BaseDebugPrintErrorLevelLib\BaseDebugPrintErrorLevelLib.c /I"%mdepath%\Include" /I"%mdepath%\Include\X64" /Zi /W3 /WX /O2 /Oi /Fa"%objpath%\BaseDebugPrintErrorLevelLib\BaseDebugPrintErrorLevelLib.cod" /Fo"%objpath%\BaseDebugPrintErrorLevelLib\BaseDebugPrintErrorLevelLib.obj" /FI".\pcdhack.h" /GS- /Gy /GF /Gr /TC /c -Wno-microsoft-static-assert
 llvm-lib "%objpath%\BaseDebugPrintErrorLevelLib\BaseDebugPrintErrorLevelLib.obj" /MACHINE:X64 /OUT:"%binpath%\BaseDebugPrintErrorLevelLib.lib"
 
+echo Compiling BaseIoLibIntrinsic...
+clang-cl %mdepath%\Library\BaseIoLibIntrinsic\IoLibMsc.c /I"%mdepath%\Include" /I"%mdepath%\Include\X64" /Zi /W3 /WX /O2 /Oi /Fa"%objpath%\BaseIoLibIntrinsic\IoLibMsc.cod" /Fo"%objpath%\BaseIoLibIntrinsic\IoLibMsc.obj" /FI".\pcdhack.h" /GS- /Gy /GF /Gr /TC /c -Wno-microsoft-static-assert -Wno-ignored-pragma-intrinsic -Wno-unused-value
+clang-cl %mdepath%\Library\BaseIoLibIntrinsic\IoLibMmioBuffer.c /I"%mdepath%\Include" /I"%mdepath%\Include\X64" /Zi /W3 /WX /O2 /Oi /Fa"%objpath%\BaseIoLibIntrinsic\IoLibMmIoBuffer.cod" /Fo"%objpath%\BaseIoLibIntrinsic\IoLibMmioBuffer.obj" /FI".\pcdhack.h" /GS- /Gy /GF /Gr /TC /c -Wno-microsoft-static-assert -Wno-ignored-pragma-intrinsic
+clang-cl %mdepath%\Library\BaseIoLibIntrinsic\IoLib.c /I"%mdepath%\Include" /I"%mdepath%\Include\X64" /Zi /W3 /WX /O2 /Oi /Fa"%objpath%\BaseIoLibIntrinsic\IoLib.cod" /Fo"%objpath%\BaseIoLibIntrinsic\IoLib.obj" /FI".\pcdhack.h" /GS- /Gy /GF /Gr /TC /c -Wno-microsoft-static-assert -Wno-ignored-pragma-intrinsic
+clang-cl %mdepath%\Library\BaseIoLibIntrinsic\IoLibInternalTdxNull.c /I"%mdepath%\Include" /I"%mdepath%\Include\X64" /Zi /W3 /WX /O2 /Oi /Fa"%objpath%\BaseIoLibIntrinsic\IoLibInternalTdxNull.cod" /Fo"%objpath%\BaseIoLibIntrinsic\IoLibInternalTdxNull.obj" /FI".\pcdhack.h" /FI"Uefi.h" /GS- /Gy /GF /Gr /TC /c -Wno-microsoft-static-assert -Wno-ignored-pragma-intrinsic
+for %%1 in (%mdepath%\Library\BaseIoLibIntrinsic\*.nasm) do (nasm -o "%objpath%\BaseIoLibIntrinsic\%%~n1.obj" -fwin64 -g -I"%mdepath%\Include" -I"%mdepath%\Include\X64" %%1)
+llvm-lib "%objpath%\BaseIoLibIntrinsic\*.obj" /MACHINE:X64 /OUT:"%binpath%\BaseIoLibIntrinsic.Lib"
+
 echo Compiling BaseMemoryLib...
 for %%1 in (%mdepath%\Library\BaseMemoryLib\*.c) do (clang-cl %%1 /I"%mdepath%\Include" /I"%mdepath%\Include\X64" /Zi /W3 /WX /O2 /Oi /Fa"%objpath%\BaseMemoryLib\%%~n1.cod" /Fo"%objpath%\BaseMemoryLib\%%~n1.obj" /FI"%mdepath%\Library\BaseMemoryLib\MemLibInternals.h" /FI".\pcdhack.h" /GS- /Gy /GF /Gr /TC /c -Wno-microsoft-static-assert)
 llvm-lib "%objpath%\BaseMemoryLib\*.obj" /MACHINE:X64 /OUT:"%binpath%\BaseMemoryLib.Lib"

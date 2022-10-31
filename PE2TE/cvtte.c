@@ -70,6 +70,25 @@ BOOLEAN ConvertToTerseExecutableImage(IN VOID* PeImage,OUT VOID* TeImage)
 					TeHead->ImageBase=NtHead->OptionalHeader.ImageBase;
 					TeHead->DataDirectory[EFI_TE_IMAGE_DIRECTORY_ENTRY_BASERELOC]=NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_BASERELOC];
 					TeHead->DataDirectory[EFI_TE_IMAGE_DIRECTORY_ENTRY_DEBUG]=NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_DEBUG];
+					// Throw warnings about unwanted data directories...
+					if(NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress || NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_EXPORT].Size)
+						ConsolePrintA("[Warning] Unwanted Data Directory is detected in NT Optional Header: Export.\n");
+					if(NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress || NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_IMPORT].Size)
+						ConsolePrintA("[Warning] Unwanted Data Directory is detected in NT Optional Header: Import.\n");
+					if(NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress || NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_RESOURCE].Size)
+						ConsolePrintA("[Warning] Unwanted Data Directory is detected in NT Optional Header: Resource. Please find .rsrc section when you make use of it!\n");
+					if(NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_EXCEPTION].VirtualAddress || NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_EXCEPTION].Size)
+						ConsolePrintA("[Warning] Unwanted Data Directory is detected in NT Optional Header: Exception.\n");
+					if(NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress || NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_SECURITY].Size)
+						ConsolePrintA("[Warning] Unwanted Data Directory is detected in NT Optional Header: Security.\n");
+					if(NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_COPYRIGHT].VirtualAddress || NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_COPYRIGHT].Size)
+						ConsolePrintA("[Warning] Unwanted Data Directory is detected in NT Optional Header: Copyright.\n");
+					if(NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_GLOBALPTR].VirtualAddress || NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_GLOBALPTR].Size)
+						ConsolePrintA("[Warning] Unwanted Data Directory is detected in NT Optional Header: Global Pointer.\n");
+					if(NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_TLS].VirtualAddress || NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_TLS].Size)
+						ConsolePrintA("[Warning] Unwanted Data Directory is detected in NT Optional Header: Thread Local Storage.\n");
+					if(NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG].VirtualAddress || NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG].Size)
+						ConsolePrintA("[Warning] Unwanted Data Directory is detected in NT Optional Header: Load Config.\n");
 					break;
 				}
 				case EFI_IMAGE_NT_OPTIONAL_HDR64_MAGIC:
@@ -81,6 +100,25 @@ BOOLEAN ConvertToTerseExecutableImage(IN VOID* PeImage,OUT VOID* TeImage)
 					TeHead->ImageBase=NtHead->OptionalHeader.ImageBase;
 					TeHead->DataDirectory[EFI_TE_IMAGE_DIRECTORY_ENTRY_BASERELOC]=NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_BASERELOC];
 					TeHead->DataDirectory[EFI_TE_IMAGE_DIRECTORY_ENTRY_DEBUG]=NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_DEBUG];
+					// Throw warnings about unwanted data directories...
+					if(NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress || NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_EXPORT].Size)
+						ConsolePrintA("[Warning] Unwanted Data Directory is detected in NT Optional Header: Export.\n");
+					if(NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress || NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_IMPORT].Size)
+						ConsolePrintA("[Warning] Unwanted Data Directory is detected in NT Optional Header: Import.\n");
+					if(NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_RESOURCE].VirtualAddress || NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_RESOURCE].Size)
+						ConsolePrintA("[Warning] Unwanted Data Directory is detected in NT Optional Header: Resource. Please find .rsrc section when you make use of it!\n");
+					if(NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_EXCEPTION].VirtualAddress || NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_EXCEPTION].Size)
+						ConsolePrintA("[Warning] Unwanted Data Directory is detected in NT Optional Header: Exception.\n");
+					if(NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_SECURITY].VirtualAddress || NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_SECURITY].Size)
+						ConsolePrintA("[Warning] Unwanted Data Directory is detected in NT Optional Header: Security.\n");
+					if(NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_COPYRIGHT].VirtualAddress || NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_COPYRIGHT].Size)
+						ConsolePrintA("[Warning] Unwanted Data Directory is detected in NT Optional Header: Copyright.\n");
+					if(NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_GLOBALPTR].VirtualAddress || NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_GLOBALPTR].Size)
+						ConsolePrintA("[Warning] Unwanted Data Directory is detected in NT Optional Header: Global Pointer.\n");
+					if(NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_TLS].VirtualAddress || NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_TLS].Size)
+						ConsolePrintA("[Warning] Unwanted Data Directory is detected in NT Optional Header: Thread Local Storage.\n");
+					if(NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG].VirtualAddress || NtHead->OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG].Size)
+						ConsolePrintA("[Warning] Unwanted Data Directory is detected in NT Optional Header: Load Config.\n");
 					break;
 				}
 				default:

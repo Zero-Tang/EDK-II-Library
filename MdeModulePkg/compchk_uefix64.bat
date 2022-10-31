@@ -15,6 +15,10 @@ clang-cl --version
 lld-link --version
 pause
 
+echo Compiling BaseBmpSupportLib...
+clang-cl %mmppath%\Library\BaseBmpSupportLib\BmpSupportLib.c /I"%mdepath%\Include" /I"%mdepath%\Include/X64" /I"%mmppath%\Include" /Zi /W3 /WX /Od /Oi /Fa"%objpath%\BaseBmpSupportLib\BmpSupportLib.cod" /Fo"%objpath%\BmpSupportLib.obj" /GS- /Gr /TC /c -Wno-microsoft-static-assert
+llvm-lib "%objpath%\BaseBmpSupportLib\BmpSupportLib.obj" /MACHINE:X64 /OUT:"%binpath%\BaseBmpSupportLib"
+
 echo Compiling RuntimeDxeCore...
 for %%1 in (%mmppath%\Core\RuntimeDxe\*.c) do (clang-cl %%1 /I"%mdepath%\Include" /I"%mdepath%\Include\X64" /I"%mmppath%\Include" /Zi /W3 /WX /Od /Oi /Fa"%objpath%\RuntimeDxeCore\%%~n1.cod" /Fo"%objpath%\RuntimeDxeCore\%%~n1.obj" /GS- /Gr /TC /c -Wno-microsoft-static-assert)
 llvm-lib "%objpath%\RuntimeDxeCore\*.obj" /MACHINE:X64 /OUT:"%binpath%\RuntimeDxeCore.lib"

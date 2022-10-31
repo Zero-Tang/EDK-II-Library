@@ -62,6 +62,7 @@ mkdir %mmppath%\compchk_uefix64
 mkdir %mmppath%\compchk_uefix64\Intermediate
 set objpath=%mmppath%\compchk_uefix64\Intermediate
 
+mkdir %objpath%\BaseBmpSupportLib
 mkdir %objpath%\RuntimeDxeCore
 mkdir %objpath%\UefiSortLib
 mkdir %objpath%\DxeResetSystemLib
@@ -71,6 +72,7 @@ mkdir %mmppath%\compfre_uefix64
 mkdir %mmppath%\compfre_uefix64\Intermediate
 set objpath=%mmppath%\compfre_uefix64\Intermediate
 
+mkdir %objpath%\BaseBmpSupportLib
 mkdir %objpath%\RuntimeDxeCore
 mkdir %objpath%\UefiSortLib
 mkdir %objpath%\DxeResetSystemLib
