@@ -2,7 +2,7 @@
   EDK II Library PCD Constant Hacks
 */
 
-#define gEfiCallerBaseName		"NoirVisor"
+extern CHAR8* gEfiCallerBaseName;
 
 #define _PCD_GET_MODE_BOOL_PcdVerifyNodeInList			FALSE
 #define _PCD_GET_MODE_BOOL_PcdDriverDiagnosticsDisable	FALSE

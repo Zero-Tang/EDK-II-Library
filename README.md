@@ -21,8 +21,23 @@ If this is your first time to build this repository, run `build_prep.bat` script
 Run `cleanup.bat` like that you did in Visual Studio cleanup. <br>
 Make sure that LLVM and NASM directories are added to the `PATH` environment variable.
 
+### Build using Python script
+You may use execute the python script to build EDK2.
+
+First, you should prepare the building environment:
+```
+python make_script.py prep MdePkg MdePkg
+```
+You may build MdePkg with Checked preset:
+```
+python make_script.py build MdePkg MdePkg Checked
+```
+Future implementation may deprecate the batch script to build EDK2.
+
 ## Packages Included in Compilation
 Currently, certain parts of `MdePkg` are included in compilation. Parts included in compilation depends on the need of project NoirVisor: https://github.com/Zero-Tang/NoirVisor
+
+If you use the python script to build EDK II, all modules in `MdePkg` are compiled.
 
 ## Issue
 Seldom might there be some typos in EDK II, resulted in compilation errors. These errors will remove the erroneous modules from library. Unless these modules are required for you to use, it is fine since it will not prevent the library from being generated. In case you require them, report the issue to [TianoCore Bugzilla](https://bugzilla.tianocore.org/). <br>

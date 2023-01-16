@@ -43,6 +43,7 @@
 *.idb
 *.pdb
 *.cod
+*.lst
 
 # Kernel Module Compile Results
 *.mod*
@@ -52,3 +53,7 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Other outputs
+*.log
+*_pcdhack.h
