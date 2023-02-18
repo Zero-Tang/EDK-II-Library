@@ -22,7 +22,7 @@ Run `cleanup.bat` like that you did in Visual Studio cleanup. <br>
 Make sure that LLVM and NASM directories are added to the `PATH` environment variable.
 
 ### Build using Python script
-You may use execute the python script to build EDK2.
+You may use execute the python script to build EDK2. (Recommended since it can build almost all libraries in MdePkg)
 
 First, you should prepare the building environment:
 ```
@@ -33,6 +33,10 @@ You may build MdePkg with Checked preset:
 python make_script.py build MdePkg MdePkg Checked
 ```
 Future implementation may deprecate the batch script to build EDK2.
+
+## Build BaseTools
+The Python script does not work with BaseTools compilation. Please run the batch script for building BaseTools. \
+Please note that the source codes for BaseTools are somehow broken that a few codes can't be built into 64-bit programs. This repository currently compile BaseTools into 32-bit Windows program only.
 
 ## Packages Included in Compilation
 Currently, certain parts of `MdePkg` are included in compilation. Parts included in compilation depends on the need of project NoirVisor: https://github.com/Zero-Tang/NoirVisor

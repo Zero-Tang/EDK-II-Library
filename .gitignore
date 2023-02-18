@@ -57,3 +57,4 @@ dkms.conf
 # Other outputs
 *.log
 *_pcdhack.h
+*Guid.c

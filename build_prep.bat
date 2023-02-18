@@ -11,11 +11,61 @@ echo Besides first-time compilation, you are not expected to execute this batch 
 pause.
 
 echo Starting Compilation Preparations...
-mkdir %edkpath%\Bin
+mkdir .\bin
+
+echo Making Directories for BaseTools...
+mkdir .\bin\BaseTools
+set toolspath=.\bin\BaseTools
+
+echo Making Directories for Checked Build...
+mkdir %toolspath%\compchk_win11x86\Intermediate
+set objpath=%toolspath%\compchk_win11x86\Intermediate
+
+mkdir %objpath%\BrotliCompress\common
+mkdir %objpath%\BrotliCompress\dec
+mkdir %objpath%\BrotliCompress\enc
+mkdir %objpath%\Common
+mkdir %objpath%\DevicePath
+mkdir %objpath%\EfiRom
+mkdir %objpath%\GenCrc32
+mkdir %objpath%\GenFfs
+mkdir %objpath%\GenFv
+mkdir %objpath%\GenFw
+mkdir %objpath%\GenSec
+mkdir %objpath%\LzmaCompress
+mkdir %objpath%\TianoCompress
+mkdir %objpath%\VfrCompile\Pccts\antlr
+mkdir %objpath%\VfrCompile\Pccts\dlg
+mkdir %objpath%\VfrCompile\Pccts\h
+mkdir %objpath%\VfrCompile\Pccts\support\set
+mkdir %objpath%\VolInfo
+
+echo Making Directories for Free Build...
+mkdir %toolspath%\compfre_win11x86\Intermediate
+set objpath=%toolspath%\compfre_win11x86\Intermediate
+
+mkdir %objpath%\BrotliCompress\common
+mkdir %objpath%\BrotliCompress\dec
+mkdir %objpath%\BrotliCompress\enc
+mkdir %objpath%\Common
+mkdir %objpath%\DevicePath
+mkdir %objpath%\EfiRom
+mkdir %objpath%\GenCrc32
+mkdir %objpath%\GenFfs
+mkdir %objpath%\GenFv
+mkdir %objpath%\GenFw
+mkdir %objpath%\GenSec
+mkdir %objpath%\LzmaCompress
+mkdir %objpath%\TianoCompress
+mkdir %objpath%\VfrCompile\Pccts\antlr
+mkdir %objpath%\VfrCompile\Pccts\dlg
+mkdir %objpath%\VfrCompile\Pccts\h
+mkdir %objpath%\VfrCompile\Pccts\support\set
+mkdir %objpath%\VolInfo
 
 echo Making Directories for MdePkg...
-mkdir %edkpath%\Bin\MdePkg
-set mdepath=%edkpath%\Bin\MdePkg
+mkdir .\bin\MdePkg
+set mdepath=.\bin\MdePkg
 
 echo Making Directories for Checked Build...
 mkdir %mdepath%\compchk_uefix64
@@ -54,8 +104,8 @@ mkdir %objpath%\UefiDebugLibConOut
 mkdir %objpath%\UefiMemoryAllocationLib
 
 echo Making Directories for MdeModulePkg...
-mkdir %edkpath%\Bin\MdeModulePkg
-set mmppath=%edkpath%\Bin\MdeModulePkg
+mkdir .\bin\MdeModulePkg
+set mmppath=.\bin\MdeModulePkg
 
 echo Making Directories for Checked Build...
 mkdir %mmppath%\compchk_uefix64
@@ -78,8 +128,8 @@ mkdir %objpath%\UefiSortLib
 mkdir %objpath%\DxeResetSystemLib
 
 echo Making Directories for SourceLevelDebugPkg...
-mkdir %edkpath%\Bin\SourceLevelDebugPkg
-set sldpath=%edkpath%\Bin\SourceLevelDebugPkg
+mkdir .\bin\SourceLevelDebugPkg
+set sldpath=.\bin\SourceLevelDebugPkg
 
 echo Making Directories for Checked Build...
 mkdir %sldpath%\compchk_uefix64
@@ -89,8 +139,8 @@ set objpath=%sldpath%\compchk_uefix64\Intermediate
 mkdir %objpath%\DebugAgent
 
 echo Making Directories for UefiCpuPkg...
-mkdir %edkpath%\Bin\UefiCpuPkg
-set cpupath=%edkpath%\Bin\UefiCpuPkg
+mkdir .\bin\UefiCpuPkg
+set cpupath=.\bin\UefiCpuPkg
 
 echo Making Directories for Checked Build...
 mkdir %cpupath%\compchk_uefix64
