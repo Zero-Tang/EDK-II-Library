@@ -150,7 +150,7 @@ set objpath=%cpupath%\compchk_uefix64\Intermediate
 mkdir %objpath%\CpuDxe
 
 echo Installing EDK2...
-setx EDK2_PATH %cd%\edk2
+setx EDK2_PATH %cd%
 
 echo Completed!
 pause.

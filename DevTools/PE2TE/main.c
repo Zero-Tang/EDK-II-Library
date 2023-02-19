@@ -1,69 +1,15 @@
 #include <Windows.h>
 #include <strsafe.h>
 #include <stdarg.h>
+#include <Common.h>
 #include "main.h"
-
-ULONG ConsolePrintA(IN PCSTR Format,...)
-{
-	CHAR Buffer[512];
-	va_list ArgList;
-	SIZE_T StringLength;
-	ULONG PrintedLength;
-	va_start(ArgList,Format);
-	StringCbVPrintfA(Buffer,sizeof(Buffer),Format,ArgList);
-	StringCbLengthA(Buffer,sizeof(Buffer),&StringLength);
-	WriteConsoleA(StdOut,Buffer,(ULONG)StringLength,&PrintedLength,NULL);
-	va_end(ArgList);
-	return PrintedLength;
-}
-
-void CopyMem(OUT PVOID Destination,IN PVOID Source,IN SIZE_T Length)
-{
-	RtlCopyMemory(Destination,Source,Length);
-}
-
-LONG StringCompareA(IN PSTR String1,IN PSTR String2)
-{
-	SIZE_T i=0;
-	while(String1[i]!=0 && String2[i]!=0)
-	{
-		if(String1[i]>String2[i])
-			return 1;
-		else if(String1[i]<String2[2])
-			return -1;
-		i++;
-	}
-	return 0;
-}
-
-PVOID MemAlloc(IN SIZE_T Length)
-{
-	return HeapAlloc(ProcHeap,HEAP_ZERO_MEMORY,Length);
-}
-
-BOOL MemFree(IN PVOID Memory)
-{
-	return HeapFree(ProcHeap,0,Memory);
-}
-
-PVOID PageAlloc(IN SIZE_T Length)
-{
-	PVOID p=VirtualAlloc(NULL,Length,MEM_COMMIT,PAGE_READWRITE);
-	if(p)RtlZeroMemory(p,Length);
-	return p;
-}
-
-BOOL PageFree(IN PVOID Memory)
-{
-	return VirtualFree(Memory,0,MEM_RELEASE);
-}
 
 PVOID LoadPeImage(IN PSTR FilePath,OUT PULONG32 ImageSize OPTIONAL)
 {
 	HANDLE hFile=CreateFileA(FilePath,GENERIC_READ,FILE_SHARE_READ,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
 	PVOID PeImage=NULL;
 	if(hFile==INVALID_HANDLE_VALUE)
-		ConsolePrintA("Failed to open image file! Error Code=%u\n",GetLastError());
+		ConsolePrintfA("Failed to open image file! Error Code=%u\n",GetLastError());
 	else
 	{
 		DWORD dwRead;
@@ -123,10 +69,10 @@ PVOID LoadPeImage(IN PSTR FilePath,OUT PULONG32 ImageSize OPTIONAL)
 				}
 			}
 			else
-				ConsolePrintA("NT Signature Mismatch!\n");
+				ConsolePrintfA("NT Signature Mismatch!\n");
 		}
 		else
-			ConsolePrintA("DOS Signature Mismatch!\n");
+			ConsolePrintfA("DOS Signature Mismatch!\n");
 		CloseHandle(hFile);
 	}
 	return PeImage;
@@ -137,7 +83,7 @@ BOOL CommitTeImage(IN PSTR FilePath,IN PVOID TeImage)
 	HANDLE hFile=CreateFileA(FilePath,GENERIC_WRITE,0,NULL,CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
 	if(hFile==INVALID_HANDLE_VALUE)
 	{
-		ConsolePrintA("Failed to create TE Image! Error Code: %u\n",GetLastError());
+		ConsolePrintfA("Failed to create TE Image! Error Code: %u\n",GetLastError());
 		return FALSE;
 	}
 	else
@@ -155,14 +101,6 @@ BOOL CommitTeImage(IN PSTR FilePath,IN PVOID TeImage)
 		CloseHandle(hFile);
 		return TRUE;
 	}
-}
-
-void Initialize()
-{
-	StdIn=GetStdHandle(STD_INPUT_HANDLE);
-	StdOut=GetStdHandle(STD_OUTPUT_HANDLE);
-	StdErr=GetStdHandle(STD_ERROR_HANDLE);
-	ProcHeap=GetProcessHeap();
 }
 
 int main(int argc,char* argv[],char* envp[])
@@ -183,7 +121,7 @@ int main(int argc,char* argv[],char* envp[])
 		{
 			if(argv[i][2])
 			{
-				ConsolePrintA("Error: Unknown option \"%s\"!",argv[i]);
+				ConsolePrintfA("Error: Unknown option \"%s\"!",argv[i]);
 				return 1;
 			}
 			switch(argv[i][1])
@@ -210,24 +148,24 @@ int main(int argc,char* argv[],char* envp[])
 	}
 	if(InputFilePath==NULL)
 	{
-		ConsolePrintA("Error: You did not specify the input image!\n");
+		ConsolePrintfA("Error: You did not specify the input image!\n");
 		return 1;
 	}
 	if(OutputFilePath==NULL)
 	{
-		ConsolePrintA("Error: You did not specify the output image!\n");
+		ConsolePrintfA("Error: You did not specify the output image!\n");
 		return 1;
 	}
-	ConsolePrintA("You are converting input image into a %s image!\n",ConvertToTE?"TE":"PE");
+	ConsolePrintfA("You are converting input image into a %s image!\n",ConvertToTE?"TE":"PE");
 	PeImageBase=LoadPeImage(InputFilePath,&PeImageSize);
 	if(PeImageBase)
 	{
 		TeImageBase=PageAlloc(PeImageSize);
 		if(TeImageBase)
 		{
-			ConsolePrintA("Converting to TE image...\n");
+			ConsolePrintfA("Converting to TE image...\n");
 			ConvertToTerseExecutableImage(PeImageBase,TeImageBase);
-			ConsolePrintA("Committing TE image...\n");
+			ConsolePrintfA("Committing TE image...\n");
 			CommitTeImage(OutputFilePath,TeImageBase);
 			PageFree(TeImageBase);
 		}
