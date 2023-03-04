@@ -9,8 +9,8 @@ echo Copyright (c) 2022, zero.tangptr@gmail.com. All Rights Reserved.
 if "%~1"=="/s" (echo DO-NOT-PAUSE is activated!) else (pause)
 
 echo Maing Directories...
-mkdir .\bin\compchk_win11x64\Intermediate\Common
-mkdir .\bin\compfre_win11x64\Intermediate\Common
+mkdir .\bin\compchk_win11x64\Intermediate\Common\zydis
+mkdir .\bin\compfre_win11x64\Intermediate\Common\zydis
 mkdir .\bin\compchk_win11x64\Intermediate\PE2TE
 mkdir .\bin\compfre_win11x64\Intermediate\PE2TE
 mkdir .\bin\compchk_win11x64\Intermediate\DumpAnalyzer

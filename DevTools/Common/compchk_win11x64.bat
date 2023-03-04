@@ -18,7 +18,11 @@ if "%~1"=="/s" (echo DO-NOT-PAUSE is activated!) else (pause)
 echo ============Start Compiling============
 for %%1 in (.\*.c) do (cl %%1 /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"..\Include" /Zi /nologo /W3 /wd4267 /WX /Od /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\%%~n1.cod" /Fo"%objpath%\%%~n1.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue)
 
+for %%1 in (.\zydis\src\*.c) do (cl %%1 /I".\zydis\include" /I".\zydis\dependencies\zycore\include" /I".\zydis\msvc" /I".\zydis\src" /nologo /Zi /W3 /WX /Od /Oi /D"ZYDIS_STATIC_BUILD" /D"ZYAN_NO_LIBC" /FAcs /Fa"%objpath%\zydis\%%~n1.cod" /Fo"%objpath%\zydis\%%~n1.obj" /Fd"%objpath%\vc140.pdb" /GS- /Qspectre /Gr /TC /c /errorReport:queue)
+
 echo ============Start Linking============
 lib "%objpath%\*.obj" /NOLOGO /Machine:X64 /OUT:"%binpath%\Common.lib"
+
+lib "%objpath%\zydis\*.obj" /NOLOGO /Machine:X64 /OUT:"%binpath%\zydis.lib"
 
 if "%~1"=="/s" (echo Completed!) else (pause)
