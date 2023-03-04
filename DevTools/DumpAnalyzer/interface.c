@@ -1,5 +1,6 @@
 #include <Windows.h>
 #include <strsafe.h>
+#include <dbghelp.h>
 #include <Common.h>
 #include "interface.h"
 
@@ -23,7 +24,7 @@ ULONG GetCommand(IN PSTR CommandString,IN SIZE_T MaximumLength,OUT PSTR **Parame
 			if(!InSpace)NumberOfParameters++;
 			if(NumberOfParameters>=16)
 			{
-				ConsolePrintfA("More than 16 parameters are found!\n");
+				ConsolePrintfA("[Internal Error] More than 16 parameters are found!\n");
 				return 0;
 			}
 			CommandString[i]='\0';
@@ -47,6 +48,7 @@ void StartDumpInterface()
 	BOOL ContinueInterface=TRUE;
 	ConsolePrintfA("Welcome to EFI Dump Analyzer Interface!\n");
 	ConsolePrintfA("Copyright (c) 2023 Zero Tang. All rights reserved.\n");
+	EnumerateImages();
 	while(ContinueInterface)
 	{
 		COMMAND_PROCESSOR ProcessCommand=NULL;
@@ -60,26 +62,28 @@ void StartDumpInterface()
 		StringCbGetsA(CmdBuff,sizeof(CmdBuff));
 		// Parse the command string and split into parameters.
 		ParamCount=GetCommand(CmdBuff,sizeof(CmdBuff),&ParamArray);
-		if(IsDebuggerPresent())__debugbreak();
-		// Use Binary-Search to invoke the proper command.
-		while(Max>=Min)
+		if(ParamCount)
 		{
-			LONG Mid=(Min+Max)>>1;
-			LONG Comparison=StringCompareA(CommandList[Mid],*ParamArray);
-			if(Comparison<0)
-				Min=Mid+1;
-			else if(Comparison>0)
-				Max=Mid-1;
-			else
+			// Use Binary-Search to invoke the proper command.
+			while(Max>=Min)
 			{
-				ProcessCommand=CommandProcessors[Mid];
-				break;
+				LONG Mid=(Min+Max)>>1;
+				LONG Comparison=StringCompareA(CommandList[Mid],*ParamArray);
+				if(Comparison<0)
+					Min=Mid+1;
+				else if(Comparison>0)
+					Max=Mid-1;
+				else
+				{
+					ProcessCommand=CommandProcessors[Mid];
+					break;
+				}
 			}
+			if(ProcessCommand)
+				ContinueInterface=ProcessCommand(ParamCount,ParamArray);
+			else
+				ConsolePrintfA("Unknown Command: %s!\n",*ParamArray);
 		}
-		if(ProcessCommand)
-			ContinueInterface=ProcessCommand(ParamCount,ParamArray);
-		else
-			ConsolePrintfA("Unknown Command: %s!\n",*ParamArray);
 		// Clean up.
 		MemFree(ParamArray);
 	} 
@@ -89,6 +93,11 @@ void StartDumpInterface()
 BOOL DefaultCommandProcessor(IN ULONG NumberOfParameters,IN PSTR Parameters[])
 {
 	ConsolePrintfA("Unimplemented Command: %s!\n",*Parameters);
+	return TRUE;
+}
+
+BOOL ListImageCommandProcessor(IN ULONG NumberOfParameters,IN PSTR Parameters[])
+{
 	return TRUE;
 }
 

@@ -1,10 +1,22 @@
 #include <Windows.h>
+#include <strsafe.h>
 
 extern HANDLE ProcHeap;
 
 void CopyMem(OUT PVOID Destination,IN PVOID Source,IN SIZE_T Length)
 {
 	RtlCopyMemory(Destination,Source,Length);
+}
+
+SIZE_T UnicodeSPrint(OUT PWSTR Buffer,IN SIZE_T Length,IN PWSTR Format,...)
+{
+	SIZE_T StringLength;
+	va_list ArgList;
+	va_start(ArgList,Format);
+	StringCbVPrintfW(Buffer,Length,Format,ArgList);
+	va_end(ArgList);
+	StringCbLengthW(Buffer,Length,&StringLength);
+	return StringLength;
 }
 
 LONG StringCompareA(IN PSTR String1,IN PSTR String2)

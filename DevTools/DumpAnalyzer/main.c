@@ -43,6 +43,7 @@ int main(int argc,char* argv[],char* envp[])
 		}
 		else
 		{
+			GetFileSizeEx(DumpFileHandle,&DumpFileSize);
 			StartDumpInterface();
 			CloseHandle(DumpFileHandle);
 			return 0;
