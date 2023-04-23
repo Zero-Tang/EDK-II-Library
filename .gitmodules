@@ -4,3 +4,6 @@
 [submodule "DevTools/Common/zydis"]
 	path = DevTools/Common/zydis
 	url = https://github.com/zyantific/zydis
+[submodule "edk2-libc"]
+	path = edk2-libc
+	url = https://github.com/tianocore/edk2-libc
