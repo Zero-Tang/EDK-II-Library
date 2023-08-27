@@ -24,7 +24,8 @@ Make sure that LLVM and NASM directories are added to the `PATH` environment var
 ### Build using Python script
 You may use execute the python script to build EDK2. (Recommended since it can build almost all libraries in MdePkg)
 
-First, you should prepare the building environment:
+The python script depends on EDK2's package manager. Due to Python's specific module importing syntax, you must copy the `edk2\BaseTools\Scripts\PackageDocumentTools\plugins` directory into the repository root. The `make_script.py` file cannot properly import that file due to this specific issue. \
+You should prepare the building environment:
 ```
 python make_script.py prep MdePkg MdePkg
 ```

@@ -58,3 +58,6 @@ dkms.conf
 *.log
 *_pcdhack.h
 *Guid.c
+
+# Miscellaneous
+plugins/
