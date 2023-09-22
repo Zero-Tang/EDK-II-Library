@@ -35,6 +35,8 @@ python make_script.py build MdePkg MdePkg Checked
 ```
 Future implementation may deprecate the batch script to build EDK2.
 
+To build `MipiSysTLib`, you will have to execute `GenMipiSystH.py` script beforehand.
+
 ## Build BaseTools
 The Python script does not work with BaseTools compilation. Please run the batch script for building BaseTools. \
 Please note that the source codes for BaseTools are somehow broken that a few codes can't be built into 64-bit programs. This repository currently compile BaseTools into 32-bit Windows program only.
@@ -42,10 +44,12 @@ Please note that the source codes for BaseTools are somehow broken that a few co
 ## Packages Included in Compilation
 Currently, certain parts of `MdePkg` are included in compilation. Parts included in compilation depends on the need of project NoirVisor: https://github.com/Zero-Tang/NoirVisor
 
-If you use the python script to build EDK II, all modules in `MdePkg` are compiled.
+If you use the python script to build EDK II, most modules in `MdePkg` are compiled.
 
 ## Issue
-Seldom might there be some typos in EDK II, resulted in compilation errors. These errors will remove the erroneous modules from library. Unless these modules are required for you to use, it is fine since it will not prevent the library from being generated. In case you require them, report the issue to [TianoCore Bugzilla](https://bugzilla.tianocore.org/). <br>
+Seldom might there be some typos in EDK II, resulted in compilation errors. These errors will remove the erroneous modules from library. Unless these modules are required for you to use, it is fine since it will not prevent the library from being generated. In case you require them, report the issue to [TianoCore Bugzilla](https://bugzilla.tianocore.org/).
+
+`BaseFdtLib` will not be built because it has such specific preparations that our script can't generalize.
 
 ## Similar Project
 [Alex Ionescu](https://github.com/ionescu007) made a project called [VisualUefi](https://github.com/ionescu007/VisualUefi).

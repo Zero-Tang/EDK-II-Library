@@ -10,6 +10,8 @@ from plugins.EdkPlugins.edk2.model import dsc,dec,inf
 
 # This pool is used for caching DEC objects in order to circumvent repetitive instantiations.
 dec_pool:dict[str,dec.DECFile]=dict()
+compiler_path:str=None
+include_path:str=None
 
 def load_dec(file_path:str)->tuple[dec.DECFile,bool]:
 	if file_path in dec_pool:
@@ -22,7 +24,7 @@ def load_dec(file_path:str)->tuple[dec.DECFile,bool]:
 
 class intermediate_object:
 	# Intermediate Object should produce ".obj" or ".res" file finally.
-	def __init__(self,file_name:str,parent,optimize:bool=False,name=None)->None:
+	def __init__(self,file_name:str,parent,name=None)->None:
 		self.file_name=file_name
 		if name is None:
 			tmp=os.path.split(file_name)[-1].split('.')
@@ -33,11 +35,10 @@ class intermediate_object:
 		else:
 			self.name=name
 		self.parent:library_object=parent
-		self.optimize=optimize
 		self.proc:subprocess.Popen=None
 
 	def to_cmd(self)->list[str]:
-		bin_path=os.path.join(".",self.parent.output_base,"comp{}_uefix64".format("fre" if self.optimize else "chk"))
+		bin_path=os.path.join(".",self.parent.output_base,"comp{}_uefix64".format("fre" if self.parent.optimize else "chk"))
 		obj_path=os.path.join(bin_path,"Intermediate",self.parent.name)
 		args:list[str]=[]
 		if self.file_name.endswith('.c'):
@@ -54,7 +55,7 @@ class intermediate_object:
 			# General Flags
 			args+=["/Zi","/nologo","/W3","/wd4244","/WX"]
 			# Optimizer Flags
-			args+=["/O2" if self.optimize else "/Od"]
+			args+=["/O2" if self.parent.optimize else "/Od"]
 			# Extra Flags
 			args+=self.parent.extra_cc_flags
 			# Output Flags
@@ -98,24 +99,24 @@ class intermediate_object:
 
 class library_object:
 	# Library Object should produce ".lib" file finally.
-	def __init__(self,name:str)->None:
+	def __init__(self,name:str,optimize:bool=False)->None:
 		self.name=name
 		self.dir_base:str=""
 		self.files:list[str]=[]
-		self.includes:list[str]=[]
+		self.includes:list[str]=[include_path,os.path.join("edk2","MdePkg")]
 		self.force_includes:list[str]=[]
-		self.extra_cc_flags:list[str]=[]
+		self.extra_cc_flags:list[str]=["/D_VCRT_BUILD"]
 		self.intermediates:list[intermediate_object]=[]
 		self.thread:threading.Thread=None
-		self.optimize:bool=False
+		self.optimize:bool=optimize
 		self.output_base:str=""
 		self.log:str=""
 		self.log_lock:threading.Lock=threading.Lock()
 
 	@classmethod
-	def from_inf(self,inf_file:inf.INFFile):
+	def from_inf(self,inf_file:inf.INFFile,optimize:bool=False):
 		base_name=os.path.split(inf_file.GetFilename())[-1][:-4]
-		lib_obj=library_object(base_name)
+		lib_obj=library_object(base_name,optimize)
 		print("Module Name: {} Type: {}".format(base_name,inf_file.GetDefine("MODULE_TYPE")))
 		lib_obj.dir_base=inf_file.GetModuleRootPath()
 		# Source Objects
@@ -197,7 +198,7 @@ class library_object:
 	def thread_rt(self)->None:
 		# Start compilation for all intermediate objects within the library
 		for fn in self.files:
-			intm=intermediate_object(fn,self,self.optimize)
+			intm=intermediate_object(fn,self)
 			if len(intm.to_cmd()):
 				self.intermediates.append(intm)
 				intm.build()
@@ -234,7 +235,7 @@ class library_object:
 
 class package_object:
 	# Package Object does not produce any files itself, but monitors the entire pipeline for building the package.
-	def __init__(self,dsc_file:dsc.DSCFile,dec_file:dec.DECFile):
+	def __init__(self,dsc_file:dsc.DSCFile,dec_file:dec.DECFile,optimize:bool=False):
 		self.name=dec_file.GetDefine("PACKAGE_NAME")
 		self.libs:list[library_object]=[]
 		# Enumerate the components
@@ -251,9 +252,11 @@ class package_object:
 					if not inf_file.Parse():
 						print("[Error] Failed to parse inf file: {}".format(inf_fn))
 						continue
-					lib_obj=library_object.from_inf(inf_file)
+					lib_obj=library_object.from_inf(inf_file,optimize)
 					lib_obj.output_base=os.path.join("bin",self.name)
-					self.libs.append(lib_obj)
+					# Remove BaseFdtLib because we can't build it.
+					if lib_obj.name!="BaseFdtLib":
+						self.libs.append(lib_obj)
 	
 	def build(self):
 		for lib_obj in self.libs:
@@ -289,11 +292,14 @@ def create_pcd_header(package_dec:dec.DECFile,output_file:str)->None:
 					pcd_type="BOOL"
 				fd.write("#define _PCD_GET_MODE_{}_{} \t {}\n".format(pcd_type,pcd.GetName(),pcd.GetPcdValue()))
 				processed_pcds.add(pcd.GetStartLinenumber())
+	# Hardcode something
+	fd.write("\nEFI_GUID gTianoCustomDecompressGuid;")
 	fd.close()
 
-def create_guid_source(package_dec:dec.DECFile,output_file:str)->library_object:
+def create_guid_source(package_dec:dec.DECFile,output_file:str,optimize:bool=False)->library_object:
 	fd=open(output_file,'w')
-	fd.write("// Generated GUID Source File\n\n")
+	fd.write("// Generated GUID Source File\n")
+	fd.write("#include <Uefi.h>\n\n")
 	guid_sects:list[dec.DECSection]=package_dec.GetSectionByName("Guids")+package_dec.GetSectionByName("Protocols")+package_dec.GetSectionByName("Ppis")
 	for guid_sect in guid_sects:
 		guid_arch:str=guid_sect.GetArch()
@@ -303,7 +309,7 @@ def create_guid_source(package_dec:dec.DECFile,output_file:str)->library_object:
 				fd.write("EFI_GUID {}={};\n".format(guid.GetName(),guid.GetGuid()))
 	fd.close()
 	pkg_name=package_dec.GetBaseName()
-	lib_obj=library_object(pkg_name+"Guids")
+	lib_obj=library_object(pkg_name+"Guids",optimize)
 	lib_obj.add_file(output_file)
 	return lib_obj
 
@@ -331,10 +337,22 @@ def build_prep(dsc_file:dsc.DSCFile,module_name:str)->None:
 					os.makedirs(os.path.join("bin",module_name,"compfre_uefix64","Intermediate",mod_dn))
 				except:
 					pass
+	try:
+		os.makedirs(os.path.join("bin",module_name,"compchk_uefix64","Intermediate",module_name+"Guids"))
+	except:
+		pass
+	try:
+		os.makedirs(os.path.join("bin",module_name,"compfre_uefix64","Intermediate",module_name+"Guids"))
+	except:
+		pass
 
 def build_library(lib_obj:library_object,optimize:bool,output_base:str)->None:
 	print(lib_obj.name)
-	print(lib_obj.build())
+	lib_obj.output_base=output_base
+	lib_obj.includes.append(os.path.join(".","edk2","MdePkg","Include"))
+	lib_obj.includes.append(os.path.join(".","edk2","MdePkg","Include","X64"))
+	lib_obj.build()
+	lib_obj.wait()
 
 if __name__=="__main__":
 	dir_path=os.path.join(".","edk2",sys.argv[2])
@@ -358,7 +376,9 @@ if __name__=="__main__":
 	elif sys.argv[1]=='build':
 		t1=time.time()
 		preset=sys.argv[4]
-		compiler_path=os.path.join("V:","Program Files","Microsoft Visual Studio","2022","BuildTools","VC","Tools","MSVC","14.31.31103","bin","Hostx64","x64")
+		ddk_path=os.path.join("V:","Program Files","Microsoft Visual Studio","2022","BuildTools","VC","Tools","MSVC","14.31.31103")
+		compiler_path=os.path.join(ddk_path,"bin","Hostx64","x64")
+		include_path=os.path.join(ddk_path,"include")
 		optimize=False
 		os.environ['PATH']=compiler_path+';'+os.environ['PATH']
 		if preset=="Checked" or preset=='Debug':
@@ -371,15 +391,13 @@ if __name__=="__main__":
 			print("Compilation for BaseTools is unimplemented!")
 		else:
 			create_pcd_header(dec_file,sys.argv[3]+"_pcdhack.h")
-			guid_pkg=create_guid_source(dec_file,sys.argv[3]+'Guid.c')
+			guid_pkg=create_guid_source(dec_file,sys.argv[3]+'Guid.c',optimize)
 			output_base=os.path.join("bin",sys.argv[3])
 			# Build the GUID package
 			build_library(guid_pkg,optimize,output_base)
-			copy_dir=os.path.join("edk2","Bin",sys.argv[3])
 			# Build the Libraries
-			pkg_obj=package_object(dsc_file,dec_file)
+			pkg_obj=package_object(dsc_file,dec_file,optimize)
 			pkg_obj.build()
-			# shutil.copytree(output_base,copy_dir,dirs_exist_ok=True)
 		t2=time.time()
 		print("Compilation Time: {} seconds...".format(t2-t1))
 	elif sys.argv[1]=='clean':
