@@ -77,7 +77,7 @@ class intermediate_object:
 				args.append("-I"+inc)
 			args.append("-P"+os.path.join(".","MdePkg","pcdhack.nasm"))
 		else:
-			print("[Error] Unknown File Extension! File Name: "+self.file_name)
+			print("[Warning - Module {}] Unknown File Extension! File Name: {}".format(self.parent.name,self.file_name))
 		return args
 	
 	def build(self)->None:
@@ -87,15 +87,17 @@ class intermediate_object:
 	def wait(self)->int:
 		stdout_bytes:bytes
 		stderr_bytes:bytes
-		print(self.to_cmd())
+		# print(self.to_cmd())
 		stdout_bytes,stderr_bytes=self.proc.communicate()
-		if len(stdout_bytes):
-			stdout_text=stdout_bytes.decode()
-			self.parent.log_print("[Build - StdOut] Unit {}\n{}".format(self.name,stdout_text),end='')
-		if len(stderr_bytes):
-			stderr_text=stderr_bytes.decode()
-			self.parent.log_print("[Build - StdErr] Unit {}\n{}".format(self.name,stderr_text),end='')
-		return self.proc.returncode
+		ret=self.proc.wait()
+		if ret:
+			if len(stdout_bytes):
+				stdout_text=stdout_bytes.decode()
+				self.parent.log_print("[Build - StdOut] Unit {}\n{}".format(self.name,stdout_text),end='')
+			if len(stderr_bytes):
+				stderr_text=stderr_bytes.decode()
+				self.parent.log_print("[Build - StdErr] Unit {}\n{}".format(self.name,stderr_text),end='')
+		return ret
 
 class library_object:
 	# Library Object should produce ".lib" file finally.
@@ -117,7 +119,7 @@ class library_object:
 	def from_inf(self,inf_file:inf.INFFile,optimize:bool=False):
 		base_name=os.path.split(inf_file.GetFilename())[-1][:-4]
 		lib_obj=library_object(base_name,optimize)
-		print("Module Name: {} Type: {}".format(base_name,inf_file.GetDefine("MODULE_TYPE")))
+		# print("Module Name: {} Type: {}".format(base_name,inf_file.GetDefine("MODULE_TYPE")))
 		lib_obj.dir_base=inf_file.GetModuleRootPath()
 		# Source Objects
 		src_list:list[inf.INFSourceObject]=inf_file.GetSourceObjects()
@@ -130,7 +132,7 @@ class library_object:
 				for key in predef_key_list:
 					keyword="DEFINE "+key[2:-1]
 					definition:str=inf_file.GetDefine(keyword)
-					print("Replacing {} with {}".format(key,definition))
+					# print("Replacing {} with {}".format(key,definition))
 					src_fn=src_fn.replace(key,definition)
 				lib_obj.add_file(src_fn)
 		# Extra Compiler Options
@@ -146,7 +148,7 @@ class library_object:
 				def_l=def_ln[0].strip()
 				def_r=def_ln[1].strip()
 				def_flags=def_r.split()
-				print("Left: {}, Right: {}".format(def_l,def_r))
+				# print("Left: {}, Right: {}".format(def_l,def_r))
 				# The left would specify a target triplet and compiler provider.
 				def_l_ln=def_l.split(":")
 				def_l_triplet:str=def_l
@@ -157,7 +159,7 @@ class library_object:
 					def_cc=def_l_ln[0].strip()
 				if def_cc=="Any" or def_cc=="MSFT":
 					if fnmatch.fnmatch("*_*_X64_CC_FLAGS",def_l_triplet):
-						print("Adding compiler flags: {}".format(def_flags))
+						# print("Adding compiler flags: {}".format(def_flags))
 						lib_obj.extra_cc_flags+=def_flags
 		# Include Headers
 		pkg_list:list[inf.INFDependentPackageObject]=inf_file.GetSectionObjectsByName("Packages")
@@ -205,20 +207,23 @@ class library_object:
 		# Now wait for all intermediate objects to be compiled
 		for intm in self.intermediates:
 			ret=intm.wait()
-			self.log_print("[Info - {}] Intermediate Object {} returned code {}".format(self.name,intm.name,ret))
+			if ret:
+				self.log_print("[Info - {}] Intermediate Object {} returned code {}".format(self.name,intm.name,ret))
 		# Next, call the linker
 		args=self.to_cmd()
 		proc=subprocess.Popen(args,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+		ret=proc.wait()
 		stdout_bytes:bytes
 		stderr_bytes:bytes
-		stdout_bytes,stderr_bytes=proc.communicate()
-		if len(stdout_bytes):
-			stdout_text=stdout_bytes.decode()
-			self.log_print("[Build - StdOut] Unit {}\n{}".format(self.name,stdout_text),end='')
-		if len(stderr_bytes):
-			stderr_text=stderr_bytes.decode()
-			self.log_print("[Build - StdErr] Unit {}\n{}".format(self.name,stderr_text),end='')
-		self.log_print("[Info - {}] Linker returned code {}".format(self.name,proc.returncode))
+		if ret:
+			stdout_bytes,stderr_bytes=proc.communicate()
+			if len(stdout_bytes):
+				stdout_text=stdout_bytes.decode()
+				self.log_print("[Build - StdOut] Unit {}\n{}".format(self.name,stdout_text),end='')
+			if len(stderr_bytes):
+				stderr_text=stderr_bytes.decode()
+				self.log_print("[Build - StdErr] Unit {}\n{}".format(self.name,stderr_text),end='')
+			self.log_print("[Info - {}] Linker returned code {}".format(self.name,ret))
 
 	def build(self)->None:
 		print("Building {}...".format(self.name))
@@ -347,7 +352,6 @@ def build_prep(dsc_file:dsc.DSCFile,module_name:str)->None:
 		pass
 
 def build_library(lib_obj:library_object,optimize:bool,output_base:str)->None:
-	print(lib_obj.name)
 	lib_obj.output_base=output_base
 	lib_obj.includes.append(os.path.join(".","edk2","MdePkg","Include"))
 	lib_obj.includes.append(os.path.join(".","edk2","MdePkg","Include","X64"))
@@ -361,9 +365,8 @@ if __name__=="__main__":
 	dsc_file=dsc.DSCFile(dsc_path)
 	dec_file=dec.DECFile(dec_path)
 	if dsc_file.Parse() and dec_file.Parse():
-		print("Number of Sections: "+str(len(dsc_file._sections)))
+		print("Successfully parsed dsc and dec files! Number of Sections: "+str(len(dsc_file._sections)))
 		dec_pool[dec_file.GetFilename()]=dec_file
-		print(dec_pool)
 	else:
 		print("Failed to parse dsc or dec file!")
 		exit(1)
