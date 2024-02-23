@@ -281,6 +281,7 @@ def create_pcd_header(package_dec:dec.DECFile,output_file:str)->None:
 	fd.write("extern CHAR8* gEfiCallerBaseName;\n")
 	fd.write("extern EFI_GUID gEfiCallerIdGuid;\n")
 	fd.write("extern EFI_GUID gTianoCoreCustomDecompressGuid;\n")
+	fd.write("extern EFI_GUID gEfiRngAlgorithmSp80090Ctr256Guid;\n")
 	pcd_sects:list[dec.DECSection]=package_dec.GetSectionByName("Pcds")
 	# Use a set to prevent repeat enumeration.
 	processed_pcds=set()
