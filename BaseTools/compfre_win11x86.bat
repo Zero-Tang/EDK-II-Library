@@ -1,6 +1,7 @@
 @echo off
 set edkpath=..\edk2
 set srcpath=..\edk2\BaseTools\Source\C
+set mdepath=..\edk2\MdePkg
 set ddkpath=V:\Program Files\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.31.31103
 set path=%ddkpath%\bin\Hostx86\x86;V:\Program Files\Windows Kits\10\bin\10.0.22621.0\x86;%path%
 set incpath=V:\Program Files\Windows Kits\10\Include\10.0.22621.0
@@ -12,7 +13,7 @@ echo +---------------------------------+
 echo + Building Common Utilitiies...   +
 echo +---------------------------------+
 echo Compiling...
-for %%1 in (%srcpath%\Common\*.c) do (cl %%1 /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%srcpath%\Include\Ia32" /Zi /nologo /W3 /wd4267 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\Common\%%~n1.cod" /Fo"%objpath%\Common\%%~n1.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue)
+for %%1 in (%srcpath%\Common\*.c) do (cl %%1 /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%mdepath%\Include\Ia32" /I"%mdepath%\Include" /Zi /nologo /W3 /wd4267 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\Common\%%~n1.cod" /Fo"%objpath%\Common\%%~n1.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue)
 
 echo Linking...
 lib "%objpath%\Common\*.obj" /NOLOGO /Machine:X86 /OUT:"%binpath%\Common.lib"
@@ -39,7 +40,7 @@ echo +-------------------------------+
 echo + Building DevicePath Tools...  +
 echo +-------------------------------+
 echo Compiling...
-for %%1 in (%srcpath%\DevicePath\*.c) do (cl %%1 /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%srcpath%\Include\Ia32" /Zi /nologo /W3 /wd4334 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\DevicePath\%%~n1.cod" /Fo"%objpath%\DevicePath\%%~n1.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue)
+for %%1 in (%srcpath%\DevicePath\*.c) do (cl %%1 /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%mdepath%\Include\Ia32" /I"%mdepath%\Include" /Zi /nologo /W3 /wd4334 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\DevicePath\%%~n1.cod" /Fo"%objpath%\DevicePath\%%~n1.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue)
 
 echo Linking...
 link "%objpath%\DevicePath\*.obj" "%binpath%\Common.lib" /LIBPATH:"%libpath%\um\x86" /LIBPATH:"%libpath%\ucrt\x86" /LIBPATH:"%ddkpath%\lib\x86" /NOLOGO /OPT:REF /DEBUG /INCREMENTAL:NO /PDB:"%binpath%\DevicePath.pdb" /OUT:"%binpath%\DevicePath.exe" /SUBSYSTEM:CONSOLE /Machine:X86 /ERRORREPORT:QUEUE
@@ -48,7 +49,7 @@ echo +--------------------------+
 echo + Building EfiRom Tools... +
 echo +--------------------------+
 echo Compiling...
-cl %srcpath%\EfiRom\EfiRom.c /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%srcpath%\Include\Ia32" /Zi /nologo /W3 /wd4244 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\EfiRom\EfiRom.cod" /Fo"%objpath%\EfiRom\EfiRom.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue
+cl %srcpath%\EfiRom\EfiRom.c /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%mdepath%\Include\Ia32" /I"%mdepath%\Include" /Zi /nologo /W3 /wd4244 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\EfiRom\EfiRom.cod" /Fo"%objpath%\EfiRom\EfiRom.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue
 
 echo Linking...
 link "%objpath%\EfiRom\EfiRom.obj" "%binpath%\Common.lib" /LIBPATH:"%libpath%\um\x86" /LIBPATH:"%libpath%\ucrt\x86" /LIBPATH:"%ddkpath%\lib\x86" /NOLOGO /OPT:REF /DEBUG /INCREMENTAL:NO /PDB:"%binpath%\EfiRom.pdb" /OUT:"%binpath%\EfiRom.exe" /SUBSYSTEM:CONSOLE /Machine:X86 /ERRORREPORT:QUEUE
@@ -57,7 +58,7 @@ echo +----------------------------+
 echo + Building GenCrc32 Tools... +
 echo +----------------------------+
 echo Compiling...
-cl %srcpath%\GenCrc32\GenCrc32.c /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%srcpath%\Include\Ia32" /Zi /nologo /W3 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\GenCrc32\GenCrc32.cod" /Fo"%objpath%\GenCrc32\GenCrc32.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue
+cl %srcpath%\GenCrc32\GenCrc32.c /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%mdepath%\Include\Ia32" /Zi /nologo /W3 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\GenCrc32\GenCrc32.cod" /Fo"%objpath%\GenCrc32\GenCrc32.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue
 
 echo Linking...
 link "%objpath%\GenCrc32\GenCrc32.obj" "%binpath%\Common.lib" /LIBPATH:"%libpath%\um\x86" /LIBPATH:"%libpath%\ucrt\x86" /LIBPATH:"%ddkpath%\lib\x86" /NOLOGO /OPT:REF /DEBUG /INCREMENTAL:NO /PDB:"%binpath%\GenCrc32.pdb" /OUT:"%binpath%\GenCrc32.exe" /SUBSYSTEM:CONSOLE /Machine:X86 /ERRORREPORT:QUEUE
@@ -66,7 +67,7 @@ echo +--------------------------+
 echo + Building GenFfs Tools... +
 echo +--------------------------+
 echo Compiling...
-cl %srcpath%\GenFfs\GenFfs.c /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%srcpath%\Include\Ia32" /Zi /nologo /W3 /wd4244 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\GenFfs\GenFfs.cod" /Fo"%objpath%\GenFfs\GenFfs.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue
+cl %srcpath%\GenFfs\GenFfs.c /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%mdepath%\Include\Ia32" /I"%mdepath%\Include" /Zi /nologo /W3 /wd4244 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\GenFfs\GenFfs.cod" /Fo"%objpath%\GenFfs\GenFfs.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue
 
 echo Linking...
 link "%objpath%\GenFfs\GenFfs.obj" "%binpath%\Common.lib" /LIBPATH:"%libpath%\um\x86" /LIBPATH:"%libpath%\ucrt\x86" /LIBPATH:"%ddkpath%\lib\x86" /NOLOGO /OPT:REF /DEBUG /INCREMENTAL:NO /PDB:"%binpath%\GenFfs.pdb" /OUT:"%binpath%\GenFfs.exe" /SUBSYSTEM:CONSOLE /Machine:X86 /ERRORREPORT:QUEUE
@@ -75,7 +76,7 @@ echo +--------------------------+
 echo + Building GenFv Tools...  +
 echo +--------------------------+
 echo Compiling...
-for %%1 in (%srcpath%\GenFv\*.c) do (cl %%1 /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%srcpath%\Include\Ia32" /Zi /nologo /W3 /wd4334 /wd4244 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\GenFv\%%~n1.cod" /Fo"%objpath%\GenFv\%%~n1.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue)
+for %%1 in (%srcpath%\GenFv\*.c) do (cl %%1 /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%mdepath%\Include\Ia32" /I"%mdepath%\Include" /Zi /nologo /W3 /wd4334 /wd4244 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\GenFv\%%~n1.cod" /Fo"%objpath%\GenFv\%%~n1.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue)
 
 echo Linking...
 link "%objpath%\GenFv\*.obj" "%binpath%\Common.lib" /LIBPATH:"%libpath%\um\x86" /LIBPATH:"%libpath%\ucrt\x86" /LIBPATH:"%ddkpath%\lib\x86" /NOLOGO /OPT:REF /DEBUG /INCREMENTAL:NO /PDB:"%binpath%\GenFv.pdb" /OUT:"%binpath%\GenFv.exe" /SUBSYSTEM:CONSOLE /Machine:X86 /ERRORREPORT:QUEUE
@@ -84,7 +85,7 @@ echo +--------------------------+
 echo + Building GenFw Tools...  +
 echo +--------------------------+
 echo Compiling...
-for %%1 in (%srcpath%\GenFw\*.c) do (cl %%1 /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%srcpath%\Include\Ia32" /Zi /nologo /W3 /wd4334 /wd4244 /wd4267 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\GenFw\%%~n1.cod" /Fo"%objpath%\GenFw\%%~n1.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue)
+for %%1 in (%srcpath%\GenFw\*.c) do (cl %%1 /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%mdepath%\Include\Ia32" /I"%mdepath%\Include" /Zi /nologo /W3 /wd4334 /wd4244 /wd4267 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\GenFw\%%~n1.cod" /Fo"%objpath%\GenFw\%%~n1.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue)
 
 echo Linking...
 link "%objpath%\GenFw\*.obj" "%binpath%\Common.lib" /LIBPATH:"%libpath%\um\x86" /LIBPATH:"%libpath%\ucrt\x86" /LIBPATH:"%ddkpath%\lib\x86" /NOLOGO /OPT:REF /DEBUG /INCREMENTAL:NO /PDB:"%binpath%\GenFw.pdb" /OUT:"%binpath%\GenFw.exe" /SUBSYSTEM:CONSOLE /Machine:X86 /ERRORREPORT:QUEUE
@@ -93,7 +94,7 @@ echo +--------------------------+
 echo + Building GenSec Tools... +
 echo +--------------------------+
 echo Compiling...
-cl %srcpath%\GenSec\GenSec.c /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%srcpath%\Include\Ia32" /Zi /nologo /W3 /wd4244 /wd4267 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\GenSec\GenSec.cod" /Fo"%objpath%\GenSec\GenSec.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue
+cl %srcpath%\GenSec\GenSec.c /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%mdepath%\Include\Ia32" /I"%mdepath%\Include" /Zi /nologo /W3 /wd4244 /wd4267 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\GenSec\GenSec.cod" /Fo"%objpath%\GenSec\GenSec.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue
 
 echo Linking...
 link "%objpath%\GenSec\GenSec.obj" "%binpath%\Common.lib" /LIBPATH:"%libpath%\um\x86" /LIBPATH:"%libpath%\ucrt\x86" /LIBPATH:"%ddkpath%\lib\x86" /NOLOGO /OPT:REF /DEBUG /INCREMENTAL:NO /PDB:"%binpath%\GenSec.pdb" /OUT:"%binpath%\GenSec.exe" /SUBSYSTEM:CONSOLE /Machine:X86 /ERRORREPORT:QUEUE
@@ -102,7 +103,7 @@ echo +---------------------------+
 echo + Building LzmaCompress...  +
 echo +---------------------------+
 echo Compiling...
-cl %srcpath%\LzmaCompress\LzmaCompress.c /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%srcpath%\Include\Ia32" /Zi /nologo /W3 /WX /O2 /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\LzmaCompress\LzmaCompress.cod" /Fo"%objpath%\LzmaCompress\LzmaCompress.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue
+cl %srcpath%\LzmaCompress\LzmaCompress.c /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%mdepath%\Include\Ia32" /Zi /nologo /W3 /WX /O2 /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\LzmaCompress\LzmaCompress.cod" /Fo"%objpath%\LzmaCompress\LzmaCompress.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue
 
 for %%1 in (%srcpath%\LzmaCompress\Sdk\C\*.c) do (cl %%1 /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /Zi /nologo /W3 /wd4334 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\LzmaCompress\%%~n1.cod" /Fo"%objpath%\LzmaCompress\%%~n1.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue)
 
@@ -113,7 +114,7 @@ echo +------------------------------+
 echo + Building TianoCompressor...  +
 echo +------------------------------+
 echo Compiling...
-cl %srcpath%\TianoCompress\TianoCompress.c /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%srcpath%\Include\Ia32" /Zi /nologo /W3 /wd4244 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\TianoCompress\TianoCompress.cod" /Fo"%objpath%\TianoCompress\TianoCompress.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue
+cl %srcpath%\TianoCompress\TianoCompress.c /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%mdepath%\Include\Ia32" /Zi /nologo /W3 /wd4244 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\TianoCompress\TianoCompress.cod" /Fo"%objpath%\TianoCompress\TianoCompress.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue
 
 echo Linking...
 link "%objpath%\TianoCompress\TianoCompress.obj" "%binpath%\Common.lib" /LIBPATH:"%libpath%\um\x86" /LIBPATH:"%libpath%\ucrt\x86" /LIBPATH:"%ddkpath%\lib\x86" /NOLOGO /OPT:REF /DEBUG /INCREMENTAL:NO /PDB:"%binpath%\TianoCompress.pdb" /OUT:"%binpath%\TianoCompress.exe" /SUBSYSTEM:CONSOLE /Machine:X86 /ERRORREPORT:QUEUE
@@ -154,7 +155,7 @@ popd
 %toolspath%\dlg.exe -C2 -i -CC -cl VfrLexer -o %srcpath%\VfrCompile %srcpath%\VfrCompile\VfrParser.dlg
 
 echo Compiling...
-for %%1 in (%srcpath%\VfrCompile\*.cpp) do (cl %%1 /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%srcpath%\Include\Ia32" /I"%srcpath%\VfrCompile\Pccts\h" /Zi /nologo /W3 /wd4334 /wd4244 /wd4018 /wd4101 /wd4102 /wd4530 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /D"PCCTS_USE_NAMESPACE_STD" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\VfrCompile\%%~n1.cod" /Fo"%objpath%\VfrCompile\%%~n1.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TP /c /errorReport:queue)
+for %%1 in (%srcpath%\VfrCompile\*.cpp) do (cl %%1 /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%mdepath%\Include\Ia32" /I"%srcpath%\VfrCompile\Pccts\h" /Zi /nologo /W3 /wd4334 /wd4244 /wd4018 /wd4101 /wd4102 /wd4530 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /D"PCCTS_USE_NAMESPACE_STD" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\VfrCompile\%%~n1.cod" /Fo"%objpath%\VfrCompile\%%~n1.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TP /c /errorReport:queue)
 
 for %%1 in (%srcpath%\VfrCompile\Pccts\h\*.cpp) do (cl %%1 /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /Zi /nologo /W3 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\VfrCompile\Pccts\h\%%~n1.cod" /Fo"%objpath%\VfrCompile\Pccts\h\%%~n1.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TP /c /errorReport:queue)
 
@@ -165,7 +166,7 @@ echo +----------------------+
 echo + Building VolInfo...  +
 echo +----------------------+
 echo Compiling...
-cl %srcpath%\VolInfo\VolInfo.c /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%srcpath%\Include\Ia32" /Zi /nologo /W3 /wd4244 /wd4267 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\VolInfo\VolInfo.cod" /Fo"%objpath%\VolInfo\VolInfo.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue
+cl %srcpath%\VolInfo\VolInfo.c /I"%ddkpath%\include" /I"%incpath%\um" /I"%incpath%\shared" /I"%incpath%\ucrt" /I"%srcpath%\Common" /I"%srcpath%\Include" /I"%mdepath%\Include\Ia32" /I"%mdepath%\Include" /Zi /nologo /W3 /wd4244 /wd4267 /WX /O2 /D"_CRT_SECURE_NO_WARNINGS" /D"_CRT_NONSTDC_NO_DEPRECATE" /Zc:wchar_t /std:c17 /FAcs /Fa"%objpath%\VolInfo\VolInfo.cod" /Fo"%objpath%\VolInfo\VolInfo.obj" /Fd"%objpath%\vc143.pdb" /GS- /Qspectre /TC /c /errorReport:queue
 
 echo Linking...
 link "%objpath%\VolInfo\VolInfo.obj" "%binpath%\Common.lib" /LIBPATH:"%libpath%\um\x86" /LIBPATH:"%libpath%\ucrt\x86" /LIBPATH:"%ddkpath%\lib\x86" /NOLOGO /OPT:REF /DEBUG /INCREMENTAL:NO /PDB:"%binpath%\VolInfo.pdb" /OUT:"%binpath%\VolInfo.exe" /SUBSYSTEM:CONSOLE /Machine:X86 /ERRORREPORT:QUEUE

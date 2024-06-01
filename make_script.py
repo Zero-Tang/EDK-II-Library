@@ -405,7 +405,7 @@ if __name__=="__main__":
 		t2=time.time()
 		print("Compilation Time: {} seconds...".format(t2-t1))
 	elif sys.argv[1]=='clean':
-		shutil.rmtree(os.path.join("edk2","Bin",sys.argv[2]))
+		shutil.rmtree(os.path.join("bin",sys.argv[2]))
 		build_prep(dsc_file,sys.argv[2])
 	else:
 		print("Unknown command: {}!".format(sys.argv[1]))
