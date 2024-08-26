@@ -36,6 +36,8 @@ class intermediate_object:
 			self.name=name
 		self.parent:library_object=parent
 		self.proc:subprocess.Popen=None
+		self.warnings=0
+		self.errors=0
 
 	def to_cmd(self)->list[str]:
 		bin_path=os.path.join(".",self.parent.output_base,"comp{}_uefix64".format("fre" if self.parent.optimize else "chk"))
@@ -78,6 +80,7 @@ class intermediate_object:
 			args.append("-P"+os.path.join(".","MdePkg","pcdhack.nasm"))
 		else:
 			print("[Warning - Module {}] Unknown File Extension! File Name: {}".format(self.parent.name,self.file_name))
+			self.warnings+=1
 		return args
 	
 	def build(self)->None:
@@ -97,6 +100,7 @@ class intermediate_object:
 			if len(stderr_bytes):
 				stderr_text=stderr_bytes.decode()
 				self.parent.log_print("[Build - StdErr] Unit {}\n{}".format(self.name,stderr_text),end='')
+			self.errors+=1
 		return ret
 
 class library_object:
@@ -114,6 +118,8 @@ class library_object:
 		self.output_base:str=""
 		self.log:str=""
 		self.log_lock:threading.Lock=threading.Lock()
+		self.errors=0
+		self.warnings=0
 
 	@classmethod
 	def from_inf(self,inf_file:inf.INFFile,optimize:bool=False):
@@ -134,7 +140,9 @@ class library_object:
 					definition:str=inf_file.GetDefine(keyword)
 					# print("Replacing {} with {}".format(key,definition))
 					src_fn=src_fn.replace(key,definition)
-				lib_obj.add_file(src_fn)
+				# Remove Thunk16.nasm because it includes intangible syntax error.
+				if not src_fn.endswith("Thunk16.nasm"):
+					lib_obj.add_file(src_fn)
 		# Extra Compiler Options
 		build_options:list[inf.INFSection]=inf_file.GetSectionByName("BuildOptions")
 		for b_opt in build_options:
@@ -167,7 +175,8 @@ class library_object:
 			path=os.path.join("edk2",pkg.GetPath()).replace('/',os.sep)
 			dec_file,ret=load_dec(path)
 			if not ret:
-				print("Failed to load DEC file! (Unit: {}, Path: {})".format(lib_obj.name,path))
+				print("[Error] Failed to load DEC file! (Unit: {}, Path: {})".format(lib_obj.name,path))
+				self.errors+=1
 				return None
 			inc_list:list[dec.DECIncludeObject]=dec_file.GetSectionObjectsByName("Includes")
 			for inc in inc_list:
@@ -204,11 +213,15 @@ class library_object:
 			if len(intm.to_cmd()):
 				self.intermediates.append(intm)
 				intm.build()
+			else:
+				self.warnings+=1
 		# Now wait for all intermediate objects to be compiled
 		for intm in self.intermediates:
 			ret=intm.wait()
 			if ret:
 				self.log_print("[Info - {}] Intermediate Object {} returned code {}".format(self.name,intm.name,ret))
+			self.warnings+=intm.warnings
+			self.errors+=intm.errors
 		# Next, call the linker
 		args=self.to_cmd()
 		proc=subprocess.Popen(args,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
@@ -224,6 +237,7 @@ class library_object:
 				stderr_text=stderr_bytes.decode()
 				self.log_print("[Build - StdErr] Unit {}\n{}".format(self.name,stderr_text),end='')
 			self.log_print("[Info - {}] Linker returned code {}".format(self.name,ret))
+			self.errors+=1
 
 	def build(self)->None:
 		print("Building {}...".format(self.name))
@@ -243,6 +257,8 @@ class package_object:
 	def __init__(self,dsc_file:dsc.DSCFile,dec_file:dec.DECFile,optimize:bool=False):
 		self.name=dec_file.GetDefine("PACKAGE_NAME")
 		self.libs:list[library_object]=[]
+		self.warnings=0
+		self.errors=0
 		# Enumerate the components
 		sect_list:list[dsc.DSCSection]=dsc_file.GetSectionByName("Components")
 		for sect in sect_list:
@@ -256,6 +272,7 @@ class package_object:
 					inf_file=inf.INFFile(inf_fn)
 					if not inf_file.Parse():
 						print("[Error] Failed to parse inf file: {}".format(inf_fn))
+						self.errors+=1
 						continue
 					lib_obj=library_object.from_inf(inf_file,optimize)
 					lib_obj.output_base=os.path.join("bin",self.name)
@@ -268,6 +285,8 @@ class package_object:
 			lib_obj.build()
 		for lib_obj in self.libs:
 			lib_obj.wait()
+			self.warnings+=lib_obj.warnings
+			self.errors+=lib_obj.errors
 
 def make_basetools():
 	pass
@@ -380,7 +399,7 @@ if __name__=="__main__":
 	elif sys.argv[1]=='build':
 		t1=time.time()
 		preset=sys.argv[4]
-		ddk_path=os.path.join("V:","Program Files","Microsoft Visual Studio","2022","BuildTools","VC","Tools","MSVC","14.31.31103")
+		ddk_path=os.path.join("V:","Program Files","Microsoft Visual Studio","2022","BuildTools","VC","Tools","MSVC","14.38.33130")
 		compiler_path=os.path.join(ddk_path,"bin","Hostx64","x64")
 		include_path=os.path.join(ddk_path,"include")
 		optimize=False
@@ -404,6 +423,7 @@ if __name__=="__main__":
 			pkg_obj.build()
 		t2=time.time()
 		print("Compilation Time: {} seconds...".format(t2-t1))
+		print("{} errors, {} warnings".format(pkg_obj.errors,pkg_obj.warnings))
 	elif sys.argv[1]=='clean':
 		shutil.rmtree(os.path.join("bin",sys.argv[2]))
 		build_prep(dsc_file,sys.argv[2])

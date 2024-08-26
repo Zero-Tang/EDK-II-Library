@@ -13,7 +13,7 @@ There are two sets of scripts for compiling EDK II Library: MSVC and LLVM. \
 Deprecation of using LLVM is planned on 2025.
 
 ## Build
-Download the EWDK11-22621 from [Microsoft](https://docs.microsoft.com/en-us/legal/windows/hardware/enterprise-wdk-license-2022). Mount it to V: drive. \
+Download the EWDK11-26100 from [Microsoft](https://docs.microsoft.com/en-us/legal/windows/hardware/enterprise-wdk-license-2022). Mount it to V: drive. \
 Download and install LLVM for Win64: https://github.com/llvm/llvm-project/releases \
 Download and install Netwide Assembler (a.k.a NASM) for Win64: https://www.nasm.us/pub/nasm/releasebuilds/?C=M;O=D \
 If this is your first time to build this repository, run `build_prep.bat` script prior to building it. \
