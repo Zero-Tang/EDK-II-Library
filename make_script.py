@@ -6,6 +6,7 @@ import threading
 import shutil
 import fnmatch
 import re
+import secrets
 from plugins.EdkPlugins.edk2.model import dsc,dec,inf
 
 # This pool is used for caching DEC objects in order to circumvent repetitive instantiations.
@@ -318,6 +319,7 @@ def create_pcd_header(package_dec:dec.DECFile,output_file:str)->None:
 				fd.write("#define _PCD_GET_MODE_{}_{} \t {}\n".format(pcd_type,pcd.GetName(),pcd.GetPcdValue()))
 				processed_pcds.add(pcd.GetStartLinenumber())
 	# Hardcode something
+	fd.write("\n#define STACK_COOKIE_VALUE \t 0x{:016X}\n".format(secrets.randbits(64)))
 	fd.write("\nEFI_GUID gTianoCustomDecompressGuid;")
 	fd.close()
 

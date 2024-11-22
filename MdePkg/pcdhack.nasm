@@ -1,9 +1,12 @@
 %define ASM_PFX(a) a
 
 %define PcdGet32(a) _gPcd_FixedAtBuild_ %+ a
+%define FixedPcdGet8(a) _PCD_GET_MODE_8_ %+ a
 
 %define THUNK_ATTRIBUTE_DISABLE_A20_MASK_INT_15   0x00000002
 %define THUNK_ATTRIBUTE_DISABLE_A20_MASK_KBD_CTRL 0x00000004
+
+%define _PCD_GET_MODE_8_PcdStackCookieExceptionVector	0x42
 
 %define BIT0	0x00000001
 %define BIT1	0x00000002

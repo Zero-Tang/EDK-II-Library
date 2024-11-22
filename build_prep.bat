@@ -149,6 +149,10 @@ set objpath=%cpupath%\compchk_uefix64\Intermediate
 
 mkdir %objpath%\CpuDxe
 
+echo Making Directories for EDK2-LibC...
+mkdir .\bin\edk2-libc\StdLib\compchk_uefix64\Intermediate\LibC\Stdio
+mkdir .\bin\edk2-libc\StdLib\compfre_uefix64\Intermediate\LibC\Stdio
+
 echo Installing EDK2...
 setx EDK2_PATH %cd%
 
